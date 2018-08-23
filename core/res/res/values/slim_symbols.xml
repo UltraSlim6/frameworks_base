@@ -28,6 +28,12 @@
     <!-- Wifi AP Disabled from Subscription change -->
     <java-symbol type="string" name="subscription_change_disabled_wifi_ap" />
 
+    <!-- Pocket Lock --> 
+    <java-symbol type="layout" name="pocket_lock_view_layout" /> 
+    <java-symbol type="id" name="pocket_hint_container" /> 
+    <java-symbol type="id" name="pocket_hint_image" /> 
+    <java-symbol type="id" name="pocket_hint_message" /> 
+
     <!-- WiFi turn off notification -->
     <java-symbol type="string" name="notify_turn_wifi_off_title" />
 

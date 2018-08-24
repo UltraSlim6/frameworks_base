@@ -52,8 +52,6 @@ import android.util.ArraySet;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.util.SparseIntArray;
-import android.pocket.IPocketCallback;
- import android.pocket.PocketManager;
 
 import com.google.android.collect.Lists;
 
@@ -139,9 +137,6 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener {
     private static final int MSG_SCREEN_TURNED_ON = 331;
     private static final int MSG_SCREEN_TURNED_OFF = 332;
 
-     // Additional messages should be 600+
-    private static final int MSG_POCKET_STATE_CHANGED = 600;
-
     /** Fingerprint state: Not listening to fingerprint. */
     private static final int FINGERPRINT_STATE_STOPPED = 0;
 
@@ -205,27 +200,6 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener {
     private List<SubscriptionInfo> mSubscriptionInfo;
     private TrustManager mTrustManager;
     private int mFingerprintRunningState = FINGERPRINT_STATE_STOPPED;
-
-        private PocketManager mPocketManager;
-     private boolean mIsDeviceInPocket;
-     private final IPocketCallback mPocketCallback = new IPocketCallback.Stub() {
-         @Override
-         public void onStateChanged(boolean isDeviceInPocket, int reason) {
-             boolean changed = false;
-             if (reason == PocketManager.REASON_SENSOR) {
-                 if (isDeviceInPocket != mIsDeviceInPocket) {
-                     mIsDeviceInPocket = isDeviceInPocket;
-                     changed = true;
-                 }
-             } else {
-                 changed = isDeviceInPocket != mIsDeviceInPocket;
-                 mIsDeviceInPocket = false;
-             }
-             if (changed) {
-                 mHandler.sendEmptyMessage(MSG_POCKET_STATE_CHANGED);
-             }
-         }
-     };
 
     private final Handler mHandler = new Handler() {
         @Override
@@ -299,9 +273,6 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener {
                     break;
                 case MSG_SCREEN_TURNED_OFF:
                     handleScreenTurnedOff();
-                    break;
-                case MSG_POCKET_STATE_CHANGED:
-                    updateFingerprintListeningState();
                     break;
             }
         }
@@ -1056,11 +1027,6 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener {
             e.printStackTrace();
         }
 
-                mPocketManager = (PocketManager) context.getSystemService(Context.POCKET_SERVICE);
-        if (mPocketManager != null) {
-            mPocketManager.addCallback(mPocketCallback);
-        }
-
         IntentFilter strongAuthTimeoutFilter = new IntentFilter();
         strongAuthTimeoutFilter.addAction(ACTION_STRONG_AUTH_TIMEOUT);
         context.registerReceiver(mStrongAuthTimeoutReceiver, strongAuthTimeoutFilter,
@@ -1759,4 +1725,3 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener {
         }
     }
 }
-fingerprintlistening state

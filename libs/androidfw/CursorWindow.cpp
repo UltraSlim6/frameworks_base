@@ -97,9 +97,6 @@ status_t CursorWindow::createFromParcel(Parcel* parcel, CursorWindow** outCursor
             int dupAshmemFd = ::dup(ashmemFd);
             if (dupAshmemFd < 0) {
                 result = -errno;
-                } else if (ashmem_get_size_region(dupAshmemFd) != size) {
-                    ::munmap(data, size);
-                    result = BAD_VALUE;
             } else {
                 void* data = ::mmap(NULL, size, PROT_READ, MAP_SHARED, dupAshmemFd, 0);
                 if (data == MAP_FAILED) {
